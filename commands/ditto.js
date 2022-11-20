@@ -19,6 +19,7 @@ module.exports = {
         await interaction.reply({ content: 'Ditto use Transform!', ephemeral: true });
 
 		const target = interaction.options.getUser('target');
+        const targetInGuild = await interaction.guild.members.fetch(target.id).catch(console.error);
 		const message = interaction.options.getString('message');
         const webhooks = await interaction.channel.fetchWebhooks().catch(console.error);
         let webhook = webhooks.find(wh => wh.token);
@@ -36,8 +37,8 @@ module.exports = {
 
         await webhook.send({
             content: message,
-            username: target.username,
-            avatarURL: target.displayAvatarURL({ dynamic: true })
+            username: targetInGuild.displayName,
+            avatarURL: targetInGuild.displayAvatarURL({ dynamic: true })
         })
         .catch(console.error);
     }
